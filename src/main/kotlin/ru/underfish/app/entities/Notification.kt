@@ -34,7 +34,7 @@ data class Notification(
     @Column(name = "title", nullable = false, length = 255)
     var title: String,
 
-    @Column(name = "message")
+    @Column(name = "message", columnDefinition = "TEXT")
     var message: String? = null,
 
     @Enumerated(EnumType.STRING)
@@ -51,7 +51,7 @@ data class Notification(
     @JoinColumn(name = "event_id")
     var event: Event? = null, //Может не должен быть nullable? (Тогда нужно поменять и в БД)
 
-    @Column(name = "action_url")
+    @Column(name = "action_url", columnDefinition = "TEXT")
     var actionUrl: String? = null,
 
     @Enumerated(EnumType.STRING)

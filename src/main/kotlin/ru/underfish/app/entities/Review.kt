@@ -26,7 +26,7 @@ data class Review(
     var rating: Int? = null, //Может не должен быть nullable? (Тогда нужно поменять и в БД)
                              //Может стоить добавить проверку? Аналог CHECK (rating BETWEEN 1 AND 5) в БД
 
-    @Column(name = "comment")
+    @Column(name = "comment", columnDefinition = "TEXT")
     var comment: String? = null,
 
     @Column(name = "created_at")

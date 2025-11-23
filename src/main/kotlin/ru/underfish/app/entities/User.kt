@@ -29,7 +29,7 @@ data class User(
     @Column(name = "last_name", nullable = false, length = 100)
     var lastName: String,
 
-    @Column(name = "avatar_url")
+    @Column(name = "avatar_url", columnDefinition = "TEXT")
     var avatarUrl: String? = null,
 
     @Column(name = "registration_date")
