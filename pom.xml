@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>ru.underfish</groupId>
-	<artifactId>app</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>app</name>
+	<artifactId>underfish</artifactId>
+	<version>0.1</version>
+	<name>underfish</name>
 	<description>&quot;&quot;</description>
 	<url/>
 	<licenses>
@@ -88,7 +88,12 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
@@ -131,5 +136,12 @@
 			</plugin>
 		</plugins>
 	</build>
-
+    <profiles>
+        <profile>
+            <id>docker</id>
+            <build>
+                <finalName>underfish-app</finalName>
+            </build>
+        </profile>
+    </profiles>
 </project>
