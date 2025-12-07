@@ -8,6 +8,7 @@ import org.springframework.web.filter.OncePerRequestFilter
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import ru.underfish.app.config.JwtConfig
 import ru.underfish.app.exception.UnauthorizedException
 
@@ -29,19 +30,25 @@ class JwtAuthenticationFilter(
             return
         }
 
-        val token = header.replace(jwtConfig.prefix, "")
+        val token = header.replace(jwtConfig.prefix, "").trim()
+
 
         try {
             if (jwtTokenUtil.validateToken(token)) {
                 val email = jwtTokenUtil.getEmailFromToken(token)
                 val userId = jwtTokenUtil.getUserIdFromToken(token)
+                val role = jwtTokenUtil.getRoleFromToken(token)
 
-                // TODO(): нужно добавить роли как-нибудь (потом)
+
+                val authorities = listOf(SimpleGrantedAuthority("ROLE_${role.name}"))
                 val authentication = UsernamePasswordAuthenticationToken(
-                    email, null, emptyList()  // Пока без ролей
+                    email, null, authorities
                 )
                 authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
                 SecurityContextHolder.getContext().authentication = authentication
+            }else {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT token")
+                return
             }
         } catch (e: Exception) {
             throw UnauthorizedException("Invalid JWT token: ${e.message}")

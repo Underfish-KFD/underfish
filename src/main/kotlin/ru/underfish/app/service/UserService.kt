@@ -3,11 +3,13 @@ package ru.underfish.app.service
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import ru.underfish.app.database.dao.UserRepository
+import ru.underfish.app.database.entities.enums.Role
 import ru.underfish.app.dto.request.UserLoginRequest
 import ru.underfish.app.dto.request.UserRegistrationRequest
 import ru.underfish.app.dto.response.UserLoginResponse
 import ru.underfish.app.dto.response.UserResponse
 import ru.underfish.app.exception.BadRequestException
+import ru.underfish.app.exception.NotFoundException
 import ru.underfish.app.exception.UnauthorizedException
 import ru.underfish.app.security.JwtTokenUtil
 
@@ -28,7 +30,8 @@ class UserService(
             passwordHash = passwordEncoder.encode(request.password),
             firstName = request.firstName,
             lastName = request.lastName,
-            phone = request.phone
+            phone = request.phone,
+            role = Role.USER,
         )
 
         val savedUser = userRepository.save(user)
@@ -43,7 +46,13 @@ class UserService(
             throw UnauthorizedException("Invalid email or password")
         }
 
-        val token = jwtTokenUtil.generateToken(user.id, user.email)
+        val token = jwtTokenUtil.generateToken(user.id, user.email, user.role)
         return UserLoginResponse(token = token)
+    }
+
+    fun getUserById(userId: Long): UserResponse {
+        val user = userRepository.findUserById(userId)
+            ?: throw NotFoundException("User not found")
+        return UserResponse.fromEntity(user)
     }
 }

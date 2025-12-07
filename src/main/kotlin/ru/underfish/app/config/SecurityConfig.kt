@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.invoke
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -13,6 +14,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import ru.underfish.app.security.JwtAuthenticationFilter
 
 @Configuration
+@EnableWebSecurity
 class SecurityConfig(
     private val jwtAuthenticationFilter: JwtAuthenticationFilter
 ) {
@@ -24,7 +26,7 @@ class SecurityConfig(
 
     @Bean
     @Profile("!test")
-    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
+    fun securityFilterChain(http: HttpSecurity, jwtAuthenticationFilter: JwtAuthenticationFilter): SecurityFilterChain {
         http {
             csrf { disable() }
             sessionManagement {
@@ -33,7 +35,10 @@ class SecurityConfig(
             authorizeHttpRequests {
                 authorize("/api/v1/users/register", permitAll)
                 authorize("/api/v1/users/login", permitAll)
-                authorize(anyRequest, authenticated)
+                authorize("/api/v1/users/{userId}", hasRole("ADMIN"))
+                authorize(anyRequest,  hasRole("USER"))
+                // для примера
+                // authorize("/api/v1/admin/**", hasRole("ADMIN"))
             }
             addFilterBefore<UsernamePasswordAuthenticationFilter>(jwtAuthenticationFilter)
         }
@@ -42,15 +47,19 @@ class SecurityConfig(
 
     @Bean
     @Profile("test")
-    fun testSecurityFilterChain(http: HttpSecurity): SecurityFilterChain {
+    fun testSecurityFilterChain(http: HttpSecurity, jwtAuthenticationFilter: JwtAuthenticationFilter): SecurityFilterChain {
         http {
             authorizeHttpRequests {
-                authorize(anyRequest, permitAll)
+                authorize("/api/v1/users/register", permitAll)
+                authorize("/api/v1/users/login", permitAll)
+                authorize("/api/v1/users/{userId}", hasRole("USER"))
+                authorize(anyRequest,  permitAll)
             }
             csrf { disable() }
             headers {
                 frameOptions { disable() }
             }
+            addFilterBefore<UsernamePasswordAuthenticationFilter>(jwtAuthenticationFilter)
         }
         return http.build()
     }

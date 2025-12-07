@@ -3,6 +3,10 @@ spring:
     active: ${SPRING_PROFILES_ACTIVE:dev}
   application:
     name: app
+  security:
+    user:
+      name: disabled
+      password: disabled
 
 management:
   endpoints:
@@ -20,4 +24,4 @@ jwt:
   secret: ${JWT_SECRET:underfish-kfd-app-2025-super-secure-secret-key-minimum-64-character-never-share-this!!!}
   expiration: ${JWT_EXPIRATION:86400000}  # 24 часа в миллисекундах
   header: ${JWT_HEADER:Authorization}
-  prefix: ${JWT_PREFIX:Bearer}
+  prefix: ${JWT_PREFIX:Bearer }

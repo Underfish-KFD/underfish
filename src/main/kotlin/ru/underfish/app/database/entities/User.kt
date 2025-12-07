@@ -2,6 +2,7 @@ package ru.underfish.app.database.entities
 
 
 import jakarta.persistence.*
+import ru.underfish.app.database.entities.enums.Role
 import java.time.LocalDateTime
 
 
@@ -31,4 +32,11 @@ data class User(
 
     @Column(name = "is_banned")
     var isBanned: Boolean = false,
+
+    @Enumerated(EnumType.STRING)
+    @Column(
+        name = "role",
+        nullable = false,
+        columnDefinition = "VARCHAR(20) DEFAULT 'USER' CHECK (role IN ('USER', 'ADMIN'))")
+    var role: Role = Role.USER,
 ) : AbstractEntity() {}

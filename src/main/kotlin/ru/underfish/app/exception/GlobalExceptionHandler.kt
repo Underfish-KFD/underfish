@@ -35,6 +35,16 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
         return ResponseEntity(errorResponse, HttpStatus.UNAUTHORIZED)
     }
 
+    @ExceptionHandler(NotFoundException::class)
+    fun handleNotFoundException(ex: NotFoundException, request: WebRequest): ResponseEntity<ErrorResponse> {
+        val errorResponse = ErrorResponse(
+            status = HttpStatus.NOT_FOUND.value(),
+            error = "Not Found",
+            message = ex.message,
+            path = request.getDescription(false).replace("uri=", "")
+        )
+        return ResponseEntity(errorResponse, HttpStatus.NOT_FOUND)
+    }
 
     // Обработка всех остальных исключений
     @ExceptionHandler(Exception::class)

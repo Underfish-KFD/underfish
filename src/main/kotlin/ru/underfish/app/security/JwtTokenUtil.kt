@@ -3,9 +3,9 @@ package ru.underfish.app.security
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
-import io.jsonwebtoken.io.Decoders
 import org.springframework.stereotype.Component
 import ru.underfish.app.config.JwtConfig
+import ru.underfish.app.database.entities.enums.Role
 import java.util.Date
 
 @Component
@@ -17,11 +17,12 @@ class JwtTokenUtil(private val jwtConfig: JwtConfig) {
     }
 
     // Генерация токена
-    fun generateToken(userId: Long, email: String): String {
+    fun generateToken(userId: Long, email: String, role: Role): String {
         return Jwts.builder()
             .subject(email)
             .claim("userId", userId)
-            .issuedAt(Date())
+            .claim("role", role.name)
+            .issuedAt(Date(System.currentTimeMillis()))
             .expiration(Date(System.currentTimeMillis() + jwtConfig.expiration))
             .signWith(secretKey)
             .compact()
@@ -53,6 +54,14 @@ class JwtTokenUtil(private val jwtConfig: JwtConfig) {
 
     // Извлечение userId из токена
     fun getUserIdFromToken(token: String): Long {
-        return getClaims(token).get("userId", Long::class.java)
+        val userId = getClaims(token).get("userId", Number::class.java)
+        return userId.toLong()  // ✅ Number.toLong() работает всегда
+    }
+
+    // Извлечение роли из токена
+    fun getRoleFromToken(token: String): Role {
+        val roleName = getClaims(token).get("role", String::class.java)
+        println(roleName)
+        return Role.valueOf(roleName)
     }
 }
