@@ -16,3 +16,8 @@ management:
     metrics:
       export:
         enabled: true
+jwt:
+  secret: ${JWT_SECRET:underfish-kfd-app-2025-super-secure-secret-key-minimum-64-character-never-share-this!!!}
+  expiration: ${JWT_EXPIRATION:86400000}  # 24 часа в миллисекундах
+  header: ${JWT_HEADER:Authorization}
+  prefix: ${JWT_PREFIX:Bearer}
