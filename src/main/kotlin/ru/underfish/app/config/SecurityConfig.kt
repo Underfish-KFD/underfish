@@ -36,9 +36,7 @@ class SecurityConfig(
                 authorize("/api/v1/users/register", permitAll)
                 authorize("/api/v1/users/login", permitAll)
                 authorize("/api/v1/users/{userId}", hasRole("ADMIN"))
-                authorize(anyRequest,  hasRole("USER"))
-                // для примера
-                // authorize("/api/v1/admin/**", hasRole("ADMIN"))
+                authorize(anyRequest, hasRole("USER"))
             }
             addFilterBefore<UsernamePasswordAuthenticationFilter>(jwtAuthenticationFilter)
         }
@@ -47,13 +45,15 @@ class SecurityConfig(
 
     @Bean
     @Profile("test")
-    fun testSecurityFilterChain(http: HttpSecurity, jwtAuthenticationFilter: JwtAuthenticationFilter): SecurityFilterChain {
+    fun testSecurityFilterChain(
+        http: HttpSecurity, jwtAuthenticationFilter: JwtAuthenticationFilter
+    ): SecurityFilterChain {
         http {
             authorizeHttpRequests {
                 authorize("/api/v1/users/register", permitAll)
                 authorize("/api/v1/users/login", permitAll)
                 authorize("/api/v1/users/{userId}", hasRole("USER"))
-                authorize(anyRequest,  permitAll)
+                authorize(anyRequest, permitAll)
             }
             csrf { disable() }
             headers {

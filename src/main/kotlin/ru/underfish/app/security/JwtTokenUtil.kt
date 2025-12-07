@@ -18,23 +18,14 @@ class JwtTokenUtil(private val jwtConfig: JwtConfig) {
 
     // Генерация токена
     fun generateToken(userId: Long, email: String, role: Role): String {
-        return Jwts.builder()
-            .subject(email)
-            .claim("userId", userId)
-            .claim("role", role.name)
+        return Jwts.builder().subject(email).claim("userId", userId).claim("role", role.name)
             .issuedAt(Date(System.currentTimeMillis()))
-            .expiration(Date(System.currentTimeMillis() + jwtConfig.expiration))
-            .signWith(secretKey)
-            .compact()
+            .expiration(Date(System.currentTimeMillis() + jwtConfig.expiration)).signWith(secretKey).compact()
     }
 
     // Извлечение claims из токена
     fun getClaims(token: String): Claims {
-        return Jwts.parser()
-            .verifyWith(secretKey)
-            .build()
-            .parseSignedClaims(token)
-            .payload
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).payload
     }
 
     // Проверка токена на валидность
@@ -55,13 +46,12 @@ class JwtTokenUtil(private val jwtConfig: JwtConfig) {
     // Извлечение userId из токена
     fun getUserIdFromToken(token: String): Long {
         val userId = getClaims(token).get("userId", Number::class.java)
-        return userId.toLong()  // ✅ Number.toLong() работает всегда
+        return userId.toLong()
     }
 
     // Извлечение роли из токена
     fun getRoleFromToken(token: String): Role {
         val roleName = getClaims(token).get("role", String::class.java)
-        println(roleName)
         return Role.valueOf(roleName)
     }
 }

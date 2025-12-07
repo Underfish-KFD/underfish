@@ -23,6 +23,7 @@ class UserController(private val userService: UserService) {
     fun loginUser(@RequestBody request: UserLoginRequest): UserLoginResponse {
         return userService.loginUser(request)
     }
+
     @GetMapping("/{userId}")
     @PreAuthorize("hasRole('ADMIN')")  // Только ADMIN может вызывать этот эндпоинт
     fun getUserById(@PathVariable userId: Long): UserResponse {

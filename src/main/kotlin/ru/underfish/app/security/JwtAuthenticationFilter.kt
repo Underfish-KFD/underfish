@@ -14,14 +14,11 @@ import ru.underfish.app.exception.UnauthorizedException
 
 @Component
 class JwtAuthenticationFilter(
-    private val jwtTokenUtil: JwtTokenUtil,
-    private val jwtConfig: JwtConfig
+    private val jwtTokenUtil: JwtTokenUtil, private val jwtConfig: JwtConfig
 ) : OncePerRequestFilter() {
 
     override fun doFilterInternal(
-        request: HttpServletRequest,
-        response: HttpServletResponse,
-        filterChain: FilterChain
+        request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain
     ) {
         val header = request.getHeader(jwtConfig.header)
 
@@ -46,7 +43,7 @@ class JwtAuthenticationFilter(
                 )
                 authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
                 SecurityContextHolder.getContext().authentication = authentication
-            }else {
+            } else {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT token")
                 return
             }

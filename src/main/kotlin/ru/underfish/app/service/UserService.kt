@@ -39,8 +39,7 @@ class UserService(
     }
 
     fun loginUser(request: UserLoginRequest): UserLoginResponse {
-        val user = userRepository.findByEmail(request.email)
-            ?: throw UnauthorizedException("Invalid email or password")
+        val user = userRepository.findByEmail(request.email) ?: throw UnauthorizedException("Invalid email or password")
 
         if (!passwordEncoder.matches(request.password, user.passwordHash)) {
             throw UnauthorizedException("Invalid email or password")
@@ -51,8 +50,7 @@ class UserService(
     }
 
     fun getUserById(userId: Long): UserResponse {
-        val user = userRepository.findUserById(userId)
-            ?: throw NotFoundException("User not found")
+        val user = userRepository.findUserById(userId) ?: throw NotFoundException("User not found")
         return UserResponse.fromEntity(user)
     }
 }
