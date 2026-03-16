@@ -58,6 +58,7 @@ CREATE TABLE events
     created_at       TIMESTAMP WITHOUT TIME ZONE,
     user_id          BIGINT                                  NOT NULL,
     title            VARCHAR(255),
+    description      TEXT,
     start_datetime   TIMESTAMP WITHOUT TIME ZONE             NOT NULL,
     end_datetime     TIMESTAMP WITHOUT TIME ZONE,
     location_id      BIGINT                                  NOT NULL,

@@ -16,6 +16,9 @@ data class Event(
     @Column(length = 255) var title: String? = null
 ) : AbstractEntity() {
 
+    @Column(name = "description", columnDefinition = "TEXT")
+    var description: String? = null
+
     @Column(name = "start_datetime", nullable = false)
     var startDatetime: LocalDateTime? = null
 
@@ -60,4 +63,3 @@ data class Event(
     )
     var tags: MutableSet<Tag> = mutableSetOf()
 }
-

@@ -6,6 +6,7 @@ import ru.underfish.app.database.dao.UserRepository
 import ru.underfish.app.database.entities.enums.Role
 import ru.underfish.app.dto.request.UserLoginRequest
 import ru.underfish.app.dto.request.UserRegistrationRequest
+import ru.underfish.app.dto.request.UserUpdateRequest
 import ru.underfish.app.dto.response.UserLoginResponse
 import ru.underfish.app.dto.response.UserResponse
 import ru.underfish.app.exception.BadRequestException
@@ -52,5 +53,27 @@ class UserService(
     fun getUserById(userId: Long): UserResponse {
         val user = userRepository.findUserById(userId) ?: throw NotFoundException("User not found")
         return UserResponse.fromEntity(user)
+    }
+
+    fun updateUser(userId: Long, request: UserUpdateRequest): UserResponse {
+        val user = userRepository.findUserById(userId) ?: throw NotFoundException("User not found")
+
+        request.firstName?.let { user.firstName = it }
+        request.lastName?.let { user.lastName = it }
+        request.phone?.let { user.phone = it }
+        request.avatarUrl?.let { user.avatarUrl = it }
+
+        val updatedUser = userRepository.save(user)
+        return UserResponse.fromEntity(updatedUser)
+    }
+
+    fun deleteUser(userId: Long) {
+        val user = userRepository.findUserById(userId) ?: throw NotFoundException("User not found")
+        userRepository.delete(user)
+    }
+
+    fun getUserIdByEmail(email: String): Long {
+        val user = userRepository.findByEmail(email) ?: throw NotFoundException("User not found")
+        return user.id
     }
 }

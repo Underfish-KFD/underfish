@@ -3,6 +3,7 @@ package ru.underfish.app.config
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.invoke
@@ -15,6 +16,7 @@ import ru.underfish.app.security.JwtAuthenticationFilter
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 class SecurityConfig(
     private val jwtAuthenticationFilter: JwtAuthenticationFilter
 ) {
@@ -26,7 +28,7 @@ class SecurityConfig(
 
     @Bean
     @Profile("!test")
-    fun securityFilterChain(http: HttpSecurity, jwtAuthenticationFilter: JwtAuthenticationFilter): SecurityFilterChain {
+    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http {
             csrf { disable() }
             sessionManagement {
@@ -35,7 +37,7 @@ class SecurityConfig(
             authorizeHttpRequests {
                 authorize("/api/v1/users/register", permitAll)
                 authorize("/api/v1/users/login", permitAll)
-                authorize("/api/v1/users/{userId}", hasRole("ADMIN"))
+                authorize("/api/v1/users/*", hasRole("ADMIN"))
                 authorize(anyRequest, hasRole("USER"))
             }
             addFilterBefore<UsernamePasswordAuthenticationFilter>(jwtAuthenticationFilter)
@@ -45,14 +47,12 @@ class SecurityConfig(
 
     @Bean
     @Profile("test")
-    fun testSecurityFilterChain(
-        http: HttpSecurity, jwtAuthenticationFilter: JwtAuthenticationFilter
-    ): SecurityFilterChain {
+    fun testSecurityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http {
             authorizeHttpRequests {
                 authorize("/api/v1/users/register", permitAll)
                 authorize("/api/v1/users/login", permitAll)
-                authorize("/api/v1/users/{userId}", hasRole("USER"))
+                authorize("/api/v1/users/*", hasRole("USER"))
                 authorize(anyRequest, permitAll)
             }
             csrf { disable() }
