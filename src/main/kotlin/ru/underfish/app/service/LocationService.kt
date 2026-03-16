@@ -14,13 +14,14 @@ class LocationService(
     fun createLocation(request: LocationCreateRequest): LocationResponse {
         val location = Location(
             latitude = request.latitude,
-            longitude = request.longitude,
-            address = request.address,
-            city = request.city,
-            district = request.district,
-            placeName = request.placeName,
-            timezone = request.timezone
-        )
+            longitude = request.longitude
+        ).apply {
+            address = request.address
+            city = request.city
+            district = request.district
+            placeName = request.placeName
+            timezone = request.timezone ?: "UTC+3"
+        }
         val savedLocation = locationRepository.save(location)
         return LocationResponse(savedLocation)
     }
@@ -37,17 +38,24 @@ class LocationService(
     }
 
     fun updateLocation(locationId: Long, request: LocationCreateRequest): LocationResponse {
-        val location = locationRepository.findById(locationId).orElseThrow {
+        val existingLocation = locationRepository.findById(locationId).orElseThrow {
             NotFoundException("Location not found")
         }
-        location.latitude = request.latitude
-        location.longitude = request.longitude
-        location.address = request.address
-        location.city = request.city
-        location.district = request.district
-        location.placeName = request.placeName
-        location.timezone = request.timezone
-        val savedLocation = locationRepository.save(location)
+
+        val updatedLocation = Location(
+            latitude = request.latitude,
+            longitude = request.longitude
+        ).apply {
+            id = existingLocation.id
+            createdAt = existingLocation.createdAt
+            address = request.address
+            city = request.city
+            district = request.district
+            placeName = request.placeName
+            timezone = request.timezone ?: existingLocation.timezone
+        }
+
+        val savedLocation = locationRepository.save(updatedLocation)
         return LocationResponse(savedLocation)
     }
 
