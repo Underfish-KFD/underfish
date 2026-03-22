@@ -232,7 +232,7 @@
                 <artifactId>detekt-maven-plugin</artifactId>
                 <version>1.23.8</version>
                 <configuration>
-                    <config>detekt.yml</config>
+                    <config>${project.basedir}/detekt.yml</config>
                     <input>src/main/kotlin,src/test/kotlin</input>
                     <report>
                         <report>html:target/reports/detekt.html</report>
