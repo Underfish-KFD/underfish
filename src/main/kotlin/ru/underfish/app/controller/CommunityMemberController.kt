@@ -17,30 +17,29 @@ import ru.underfish.app.service.CommunityMemberService
 @RestController
 @RequestMapping("/api/v1/communities/{community_id}/members")
 class CommunityMemberController(
-    private val communityMemberService: CommunityMemberService
+    private val communityMemberService: CommunityMemberService,
 ) {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun addMember(
         @PathVariable("community_id") communityId: Long,
-        @RequestBody request: CommunityMemberRequest
+        @RequestBody request: CommunityMemberRequest,
     ): CommunityMemberResponse {
         val userId = request.userId.toLongOrNull() ?: throw BadRequestException("Invalid user id")
         return communityMemberService.addMember(communityId, userId)
     }
 
     @GetMapping
-    fun getMembers(@PathVariable("community_id") communityId: Long): List<CommunityMemberResponse> {
-        return communityMemberService.getMembersByCommunityId(communityId)
-    }
+    fun getMembers(
+        @PathVariable("community_id") communityId: Long,
+    ): List<CommunityMemberResponse> = communityMemberService.getMembersByCommunityId(communityId)
 
     @DeleteMapping("/{user_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun removeMember(
         @PathVariable("community_id") communityId: Long,
-        @PathVariable("user_id") userId: Long
+        @PathVariable("user_id") userId: Long,
     ) {
         communityMemberService.removeMember(communityId, userId)
     }
 }
-

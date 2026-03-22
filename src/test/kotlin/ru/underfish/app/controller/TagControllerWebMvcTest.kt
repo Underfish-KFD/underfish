@@ -24,7 +24,6 @@ import ru.underfish.app.service.TagService
 @AutoConfigureMockMvc(addFilters = false)
 @Import(GlobalExceptionHandler::class)
 class TagControllerWebMvcTest {
-
     @Autowired
     private lateinit var mockMvc: MockMvc
 
@@ -41,26 +40,28 @@ class TagControllerWebMvcTest {
 
         Mockito.`when`(tagService.createTag(request)).thenReturn(response)
 
-        mockMvc.perform(
-            post("/api/v1/tags")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("""{"name":"music"}""")
-        )
-            .andExpect(status().isCreated)
+        mockMvc
+            .perform(
+                post("/api/v1/tags")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("""{"name":"music"}"""),
+            ).andExpect(status().isCreated)
             .andExpect(jsonPath("$.tag_id").value("1"))
             .andExpect(jsonPath("$.name").value("music"))
     }
 
     @Test
     fun `get tags returns 200 and list`() {
-        val response = listOf(
-            TagResponse(tagId = "1", name = "music"),
-            TagResponse(tagId = "2", name = "sport")
-        )
+        val response =
+            listOf(
+                TagResponse(tagId = "1", name = "music"),
+                TagResponse(tagId = "2", name = "sport"),
+            )
 
         Mockito.`when`(tagService.getTags()).thenReturn(response)
 
-        mockMvc.perform(get("/api/v1/tags"))
+        mockMvc
+            .perform(get("/api/v1/tags"))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$[0].name").value("music"))
             .andExpect(jsonPath("$[1].name").value("sport"))
@@ -70,10 +71,10 @@ class TagControllerWebMvcTest {
     fun `get tag returns 404 when tag not found`() {
         Mockito.`when`(tagService.getTagById(999L)).thenThrow(NotFoundException("Tag not found"))
 
-        mockMvc.perform(get("/api/v1/tags/999"))
+        mockMvc
+            .perform(get("/api/v1/tags/999"))
             .andExpect(status().isNotFound)
             .andExpect(jsonPath("$.error").value("Not Found"))
             .andExpect(jsonPath("$.message").value("Tag not found"))
     }
 }
-

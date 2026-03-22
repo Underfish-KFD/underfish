@@ -13,11 +13,11 @@ data class NotificationResponse(
     val createdAt: LocalDateTime,
     val actionUrl: String?,
     val priority: String,
-    val eventId: String?
+    val eventId: String?,
 ) {
     companion object {
-        fun fromEntity(notification: Notification): NotificationResponse {
-            return NotificationResponse(
+        fun fromEntity(notification: Notification): NotificationResponse =
+            NotificationResponse(
                 notificationId = notification.id.toString(),
                 userId = notification.user.id.toString(),
                 title = notification.title,
@@ -27,9 +27,7 @@ data class NotificationResponse(
                 createdAt = notification.createdAt,
                 actionUrl = notification.actionUrl,
                 priority = notification.priority.name,
-                eventId = notification.event?.id?.toString()
+                eventId = notification.event?.id?.toString(),
             )
-        }
     }
 }
-

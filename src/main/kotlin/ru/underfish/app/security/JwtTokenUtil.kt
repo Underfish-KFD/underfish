@@ -9,39 +9,50 @@ import ru.underfish.app.database.entities.enums.Role
 import java.util.Date
 
 @Component
-class JwtTokenUtil(private val jwtConfig: JwtConfig) {
-
+class JwtTokenUtil(
+    private val jwtConfig: JwtConfig,
+) {
     // Создаём ключ из секретной строки
     private val secretKey by lazy {
         Keys.hmacShaKeyFor(jwtConfig.secret.toByteArray(Charsets.UTF_8))
     }
 
     // Генерация токена
-    fun generateToken(userId: Long, email: String, role: Role): String {
-        return Jwts.builder().subject(email).claim("userId", userId).claim("role", role.name)
+    fun generateToken(
+        userId: Long,
+        email: String,
+        role: Role,
+    ): String =
+        Jwts
+            .builder()
+            .subject(email)
+            .claim("userId", userId)
+            .claim("role", role.name)
             .issuedAt(Date(System.currentTimeMillis()))
-            .expiration(Date(System.currentTimeMillis() + jwtConfig.expiration)).signWith(secretKey).compact()
-    }
+            .expiration(Date(System.currentTimeMillis() + jwtConfig.expiration))
+            .signWith(secretKey)
+            .compact()
 
     // Извлечение claims из токена
-    fun getClaims(token: String): Claims {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).payload
-    }
+    fun getClaims(token: String): Claims =
+        Jwts
+            .parser()
+            .verifyWith(secretKey)
+            .build()
+            .parseSignedClaims(token)
+            .payload
 
     // Проверка токена на валидность
-    fun validateToken(token: String): Boolean {
-        return try {
+    fun validateToken(token: String): Boolean =
+        try {
             val claims = getClaims(token)
             !claims.expiration.before(Date())
         } catch (e: Exception) {
             false
         }
-    }
 
     // Извлечение email из токена
-    fun getEmailFromToken(token: String): String {
-        return getClaims(token).subject
-    }
+    fun getEmailFromToken(token: String): String = getClaims(token).subject
 
     // Извлечение userId из токена
     fun getUserIdFromToken(token: String): Long {

@@ -10,7 +10,7 @@ import ru.underfish.app.exception.NotFoundException
 
 @Service
 class TagService(
-    private val tagRepository: TagRepository
+    private val tagRepository: TagRepository,
 ) {
     fun createTag(request: TagRequest): TagResponse {
         if (tagRepository.existsByName(request.name)) {
@@ -21,21 +21,24 @@ class TagService(
         return TagResponse(savedTag)
     }
 
-    fun getTags(): List<TagResponse> {
-        return tagRepository.findAll().map { TagResponse(it) }
-    }
+    fun getTags(): List<TagResponse> = tagRepository.findAll().map { TagResponse(it) }
 
     fun getTagById(tagId: Long): TagResponse {
-        val tag = tagRepository.findById(tagId).orElseThrow {
-            NotFoundException("Tag not found")
-        }
+        val tag =
+            tagRepository.findById(tagId).orElseThrow {
+                NotFoundException("Tag not found")
+            }
         return TagResponse(tag)
     }
 
-    fun updateTag(tagId: Long, request: TagRequest): TagResponse {
-        val tag = tagRepository.findById(tagId).orElseThrow {
-            NotFoundException("Tag not found")
-        }
+    fun updateTag(
+        tagId: Long,
+        request: TagRequest,
+    ): TagResponse {
+        val tag =
+            tagRepository.findById(tagId).orElseThrow {
+                NotFoundException("Tag not found")
+            }
         if (tagRepository.existsByNameAndIdNot(request.name, tagId)) {
             throw BadRequestException("Tag with name '${request.name}' already exists")
         }

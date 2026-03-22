@@ -7,11 +7,8 @@ import lombok.Data
 @Data
 @Table(name = "communities")
 data class Community(
-
-    @Column(name = "name", length = 255, nullable = false) var name: String = "community"
-
+    @Column(name = "name", length = 255, nullable = false) var name: String = "community",
 ) : AbstractEntity() {
-
     @Column(columnDefinition = "TEXT")
     var description: String? = null
 
@@ -25,7 +22,7 @@ data class Community(
     @JoinTable(
         name = "CommunityTags",
         joinColumns = [JoinColumn(name = "community_id")],
-        inverseJoinColumns = [JoinColumn(name = "tag_id")]
+        inverseJoinColumns = [JoinColumn(name = "tag_id")],
     )
     var tags: MutableSet<Tag> = mutableSetOf()
 }

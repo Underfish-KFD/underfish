@@ -1,0 +1,36 @@
+build:
+    maxIssues: 0
+
+complexity:
+    active: true
+    CyclomaticComplexMethod:
+        threshold: 15
+    LongMethod:
+        threshold: 60
+    LongParameterList:
+        functionThreshold: 8
+        constructorThreshold: 8
+
+naming:
+    active: true
+    FunctionNaming:
+        functionPattern: '[a-z][a-zA-Z0-9]*'
+    VariableNaming:
+        variablePattern: '[a-z][A-Za-z0-9]*'
+
+style:
+    active: true
+    MagicNumber:
+        active: false
+    WildcardImport:
+        active: false
+
+exceptions:
+    active: true
+    TooGenericExceptionCaught:
+        active: false
+    TooGenericExceptionThrown:
+        active: true
+
+comments:
+    active: false

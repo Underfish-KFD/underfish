@@ -3,7 +3,7 @@ package ru.underfish.app.dto.response
 import ru.underfish.app.database.entities.Community
 import java.time.LocalDateTime
 
-data class CommunityResponse (
+data class CommunityResponse(
     val communityId: String,
     val name: String,
     val description: String?,
@@ -13,8 +13,11 @@ data class CommunityResponse (
     val isPrivate: Boolean,
 ) {
     companion object {
-        fun fromEntity(community: Community, organizerId: Long): CommunityResponse {
-            return CommunityResponse(
+        fun fromEntity(
+            community: Community,
+            organizerId: Long,
+        ): CommunityResponse =
+            CommunityResponse(
                 communityId = community.id.toString(),
                 organizerId = organizerId.toString(),
                 name = community.name,
@@ -23,6 +26,5 @@ data class CommunityResponse (
                 createdAt = community.createdAt,
                 isPrivate = community.isPrivate,
             )
-        }
     }
 }

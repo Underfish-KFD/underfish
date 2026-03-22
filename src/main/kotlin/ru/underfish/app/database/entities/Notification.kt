@@ -1,34 +1,29 @@
 package ru.underfish.app.database.entities
 
-
 import jakarta.persistence.*
+import lombok.Data
 import ru.underfish.app.database.entities.enums.NotificationPriority
 import ru.underfish.app.database.entities.enums.NotificationType
-import lombok.Data
-
 
 @Entity
 @Data
 @Table(name = "notifications")
 data class Notification(
-
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "user_id", nullable = false) var user: User,
-
-    @Column(name = "title", nullable = false, length = 255) var title: String
+    @Column(name = "title", nullable = false, length = 255) var title: String,
 ) : AbstractEntity() {
-
     @Column(name = "message", columnDefinition = "TEXT")
     var message: String? = null
 
     @Enumerated(EnumType.STRING)
     @Column(
-        name = "type", columnDefinition = "VARCHAR(20) DEFAULT 'system' CHECK (type IN ('event', 'system', 'message'))"
+        name = "type",
+        columnDefinition = "VARCHAR(20) DEFAULT 'system' CHECK (type IN ('event', 'system', 'message'))",
     )
-    var type: NotificationType = NotificationType.system
+    var type: NotificationType = NotificationType.SYSTEM
 
     @Column(name = "is_read")
     var isRead: Boolean = false
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")
@@ -40,7 +35,7 @@ data class Notification(
     @Enumerated(EnumType.STRING)
     @Column(
         name = "priority",
-        columnDefinition = "VARCHAR(20) DEFAULT 'normal' CHECK (priority IN ('low', 'normal', 'high'))"
+        columnDefinition = "VARCHAR(20) DEFAULT 'normal' CHECK (priority IN ('low', 'normal', 'high'))",
     )
-    var priority: NotificationPriority = NotificationPriority.normal
+    var priority: NotificationPriority = NotificationPriority.NORMAL
 }

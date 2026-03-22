@@ -7,27 +7,28 @@ import ru.underfish.app.exception.NotFoundException
 
 @Service
 class NotificationService(
-    private val notificationRepository: NotificationRepository
+    private val notificationRepository: NotificationRepository,
 ) {
-    fun getUserNotifications(userId: Long): List<NotificationResponse> {
-        return notificationRepository.findByUserIdOrderByCreatedAtDesc(userId)
+    fun getUserNotifications(userId: Long): List<NotificationResponse> =
+        notificationRepository
+            .findByUserIdOrderByCreatedAtDesc(userId)
             .map(NotificationResponse::fromEntity)
-    }
 
     fun markAsRead(notificationId: Long): NotificationResponse {
-        val notification = notificationRepository.findById(notificationId).orElseThrow {
-            NotFoundException("Notification not found")
-        }
+        val notification =
+            notificationRepository.findById(notificationId).orElseThrow {
+                NotFoundException("Notification not found")
+            }
 
         notification.isRead = true
         return NotificationResponse.fromEntity(notificationRepository.save(notification))
     }
 
     fun deleteNotification(notificationId: Long) {
-        val notification = notificationRepository.findById(notificationId).orElseThrow {
-            NotFoundException("Notification not found")
-        }
+        val notification =
+            notificationRepository.findById(notificationId).orElseThrow {
+                NotFoundException("Notification not found")
+            }
         notificationRepository.delete(notification)
     }
 }
-

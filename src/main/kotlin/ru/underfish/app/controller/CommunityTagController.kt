@@ -17,30 +17,29 @@ import ru.underfish.app.service.CommunityTagService
 @RestController
 @RequestMapping("/api/v1/communities/{community_id}/tags")
 class CommunityTagController(
-    private val communityTagService: CommunityTagService
+    private val communityTagService: CommunityTagService,
 ) {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun addTag(
         @PathVariable("community_id") communityId: Long,
-        @RequestBody request: CommunityTagRequest
+        @RequestBody request: CommunityTagRequest,
     ): CommunityTagResponse {
         val tagId = request.tagId.toLongOrNull() ?: throw BadRequestException("Invalid tag id")
         return communityTagService.addTagToCommunity(communityId, tagId)
     }
 
     @GetMapping
-    fun getTags(@PathVariable("community_id") communityId: Long): List<CommunityTagResponse> {
-        return communityTagService.getCommunityTags(communityId)
-    }
+    fun getTags(
+        @PathVariable("community_id") communityId: Long,
+    ): List<CommunityTagResponse> = communityTagService.getCommunityTags(communityId)
 
     @DeleteMapping("/{tag_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun removeTag(
         @PathVariable("community_id") communityId: Long,
-        @PathVariable("tag_id") tagId: Long
+        @PathVariable("tag_id") tagId: Long,
     ) {
         communityTagService.removeTagFromCommunity(communityId, tagId)
     }
 }
-

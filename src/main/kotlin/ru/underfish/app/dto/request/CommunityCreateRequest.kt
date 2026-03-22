@@ -1,6 +1,6 @@
 package ru.underfish.app.dto.request
 
-data class CommunityCreateRequest (
+data class CommunityCreateRequest(
     val name: String,
     val description: String,
     val isPrivate: Boolean,

@@ -9,32 +9,33 @@ import ru.underfish.app.service.TagService
 @RestController
 @RequestMapping("/api/v1/tags")
 class TagController(
-    private val tagService: TagService
+    private val tagService: TagService,
 ) {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun createTag(@RequestBody request: TagRequest): TagResponse {
-        return tagService.createTag(request)
-    }
+    fun createTag(
+        @RequestBody request: TagRequest,
+    ): TagResponse = tagService.createTag(request)
 
     @GetMapping
-    fun getTags(): List<TagResponse> {
-        return tagService.getTags()
-    }
+    fun getTags(): List<TagResponse> = tagService.getTags()
 
     @GetMapping("/{tag_id}")
-    fun getTag(@PathVariable("tag_id") tagId: Long): TagResponse {
-        return tagService.getTagById(tagId)
-    }
+    fun getTag(
+        @PathVariable("tag_id") tagId: Long,
+    ): TagResponse = tagService.getTagById(tagId)
 
     @PutMapping("/{tag_id}")
-    fun updateTag(@PathVariable("tag_id") tagId: Long, @RequestBody request: TagRequest): TagResponse {
-        return tagService.updateTag(tagId, request)
-    }
+    fun updateTag(
+        @PathVariable("tag_id") tagId: Long,
+        @RequestBody request: TagRequest,
+    ): TagResponse = tagService.updateTag(tagId, request)
 
     @DeleteMapping("/{tag_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteTag(@PathVariable("tag_id") tagId: Long) {
+    fun deleteTag(
+        @PathVariable("tag_id") tagId: Long,
+    ) {
         tagService.deleteTag(tagId)
     }
 }

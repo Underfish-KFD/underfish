@@ -8,18 +8,16 @@ data class EventAttendanceResponse(
     val userId: String,
     val eventId: String,
     val status: String,
-    val createdAt: LocalDateTime
+    val createdAt: LocalDateTime,
 ) {
     companion object {
-        fun fromEntity(attendance: EventAttendance): EventAttendanceResponse {
-            return EventAttendanceResponse(
+        fun fromEntity(attendance: EventAttendance): EventAttendanceResponse =
+            EventAttendanceResponse(
                 attendanceId = attendance.id.toString(),
                 userId = attendance.user.id.toString(),
                 eventId = attendance.event.id.toString(),
                 status = attendance.status.name,
-                createdAt = attendance.createdAt
+                createdAt = attendance.createdAt,
             )
-        }
     }
 }
-

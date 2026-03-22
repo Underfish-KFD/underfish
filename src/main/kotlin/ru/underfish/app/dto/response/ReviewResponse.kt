@@ -9,19 +9,17 @@ data class ReviewResponse(
     val eventId: String,
     val rating: Int?,
     val comment: String?,
-    val createdAt: LocalDateTime
+    val createdAt: LocalDateTime,
 ) {
     companion object {
-        fun fromEntity(review: Review): ReviewResponse {
-            return ReviewResponse(
+        fun fromEntity(review: Review): ReviewResponse =
+            ReviewResponse(
                 reviewId = review.id.toString(),
                 userId = review.user.id.toString(),
                 eventId = review.event.id.toString(),
                 rating = review.rating,
                 comment = review.comment,
-                createdAt = review.createdAt
+                createdAt = review.createdAt,
             )
-        }
     }
 }
-

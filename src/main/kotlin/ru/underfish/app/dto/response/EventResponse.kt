@@ -17,11 +17,11 @@ data class EventResponse(
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime,
     val maxParticipants: Int,
-    val isOnline: Boolean
+    val isOnline: Boolean,
 ) {
     companion object {
-        fun fromEntity(event: Event): EventResponse {
-            return EventResponse(
+        fun fromEntity(event: Event): EventResponse =
+            EventResponse(
                 eventId = event.id.toString(),
                 title = event.title ?: "",
                 description = event.description ?: "",
@@ -35,8 +35,7 @@ data class EventResponse(
                 createdAt = event.createdAt,
                 updatedAt = event.updatedAt,
                 maxParticipants = event.maxParticipants,
-                isOnline = event.isOnline
+                isOnline = event.isOnline,
             )
-        }
     }
 }

@@ -1,19 +1,19 @@
 spring:
-  docker:
-    compose:
-      enabled: false
+    docker:
+        compose:
+            enabled: false
 
-  datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:underfish}
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:postgres}
-    driver-class-name: org.postgresql.Driver
+    datasource:
+        url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:underfish}
+        username: ${DB_USERNAME:postgres}
+        password: ${DB_PASSWORD:postgres}
+        driver-class-name: org.postgresql.Driver
 
-  flyway:
-    enabled: true
-    locations: classpath:db/migration
+    flyway:
+        enabled: true
+        locations: classpath:db/migration
 
-  jpa:
-    hibernate:
-      ddl-auto: validate
-    show-sql: false
+    jpa:
+        hibernate:
+            ddl-auto: validate
+        show-sql: false

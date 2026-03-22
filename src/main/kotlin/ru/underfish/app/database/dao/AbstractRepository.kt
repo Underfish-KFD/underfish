@@ -5,6 +5,4 @@ import org.springframework.data.repository.NoRepositoryBean
 import ru.underfish.app.database.entities.AbstractEntity
 
 @NoRepositoryBean
-interface AbstractRepository<T : AbstractEntity> : JpaRepository<T, Long> {
-
-}
+interface AbstractRepository<T : AbstractEntity> : JpaRepository<T, Long>
