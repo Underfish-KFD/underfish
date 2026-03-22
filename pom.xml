@@ -31,6 +31,8 @@
 		<maven.compiler.release>21</maven.compiler.release>
 		<kotlin.version>1.9.25</kotlin.version>
         <jjwt.version>0.13.0</jjwt.version>
+        <ktlint.version>1.5.0</ktlint.version>
+        <detekt.version>1.23.8</detekt.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -209,6 +211,44 @@
 					</dependency>
 				</dependencies>
 			</plugin>
+            <!-- ===== ktlint ===== -->
+            <plugin>
+                <groupId>com.github.gantsign.maven</groupId>
+                <artifactId>ktlint-maven-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <id>ktlint-check</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- ===== detekt ===== -->
+            <plugin>
+                <groupId>com.github.ozsie</groupId>
+                <artifactId>detekt-maven-plugin</artifactId>
+                <version>1.23.8</version>
+                <configuration>
+                    <config>detekt.yml</config>
+                    <input>src/main/kotlin,src/test/kotlin</input>
+                    <report>
+                        <report>html:target/reports/detekt.html</report>
+                        <report>xml:target/reports/detekt.xml</report>
+                    </report>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>detekt-check</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 		</plugins>
 	</build>
     <profiles>
@@ -218,5 +258,28 @@
                 <finalName>underfish-app</finalName>
             </build>
         </profile>
+
+    <!-- Профиль для CI: только линты, без тестов и сборки -->
+    <profile>
+        <id>lint</id>
+        <build>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <skip>true</skip>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <configuration>
+                        <skip>true</skip>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </build>
+    </profile>
     </profiles>
 </project>

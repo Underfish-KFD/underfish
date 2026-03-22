@@ -13,25 +13,31 @@ import ru.underfish.app.exception.NotFoundException
 class CommunityMemberService(
     private val communityMemberRepository: CommunityMemberRepository,
     private val userRepository: UserRepository,
-    private val communityRepository: CommunityRepository
+    private val communityRepository: CommunityRepository,
 ) {
-    fun addMember(communityId: Long, userId: Long): CommunityMemberResponse {
+    fun addMember(
+        communityId: Long,
+        userId: Long,
+    ): CommunityMemberResponse {
         if (communityMemberRepository.existsByCommunityIdAndUserId(communityId, userId)) {
             throw BadRequestException("Member already exists in community")
         }
 
-        val user = userRepository.findUserById(userId)
-            ?: throw NotFoundException("User not found")
-        val community = communityRepository.findById(communityId).orElseThrow {
-            NotFoundException("Community not found")
-        }
+        val user =
+            userRepository.findUserById(userId)
+                ?: throw NotFoundException("User not found")
+        val community =
+            communityRepository.findById(communityId).orElseThrow {
+                NotFoundException("Community not found")
+            }
 
-        val member = communityMemberRepository.save(
-            CommunityMember(
-                user = user,
-                community = community
+        val member =
+            communityMemberRepository.save(
+                CommunityMember(
+                    user = user,
+                    community = community,
+                ),
             )
-        )
 
         return CommunityMemberResponse.fromEntity(member)
     }
@@ -41,15 +47,18 @@ class CommunityMemberService(
             NotFoundException("Community not found")
         }
 
-        return communityMemberRepository.findByCommunityId(communityId)
+        return communityMemberRepository
+            .findByCommunityId(communityId)
             .map(CommunityMemberResponse::fromEntity)
     }
 
-    fun removeMember(communityId: Long, userId: Long) {
+    fun removeMember(
+        communityId: Long,
+        userId: Long,
+    ) {
         val deleted = communityMemberRepository.deleteByCommunityIdAndUserId(communityId, userId)
         if (deleted == 0L) {
             throw NotFoundException("Member not found in community")
         }
     }
 }
-

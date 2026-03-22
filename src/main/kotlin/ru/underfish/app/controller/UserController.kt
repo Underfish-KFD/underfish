@@ -12,38 +12,39 @@ import ru.underfish.app.service.UserService
 
 @RestController
 @RequestMapping("/api/v1/users")
-class UserController(private val userService: UserService) {
-
+class UserController(
+    private val userService: UserService,
+) {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    fun registerUser(@RequestBody request: UserRegistrationRequest): UserResponse {
-        return userService.registerUser(request)
-    }
+    fun registerUser(
+        @RequestBody request: UserRegistrationRequest,
+    ): UserResponse = userService.registerUser(request)
 
     @PostMapping("/login")
-    fun loginUser(@RequestBody request: UserLoginRequest): UserLoginResponse {
-        return userService.loginUser(request)
-    }
+    fun loginUser(
+        @RequestBody request: UserLoginRequest,
+    ): UserLoginResponse = userService.loginUser(request)
 
     @GetMapping("/{user_id}")
     @PreAuthorize("hasRole('ADMIN')")
-    fun getUserById(@PathVariable("user_id") userId: Long): UserResponse {
-        return userService.getUserById(userId)
-    }
+    fun getUserById(
+        @PathVariable("user_id") userId: Long,
+    ): UserResponse = userService.getUserById(userId)
 
     @PutMapping("/{user_id}")
     @PreAuthorize("hasRole('ADMIN')")
     fun updateUser(
         @PathVariable("user_id") userId: Long,
-        @RequestBody request: UserUpdateRequest
-    ): UserResponse {
-        return userService.updateUser(userId, request)
-    }
+        @RequestBody request: UserUpdateRequest,
+    ): UserResponse = userService.updateUser(userId, request)
 
     @DeleteMapping("/{user_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('ADMIN')")
-    fun deleteUser(@PathVariable("user_id") userId: Long) {
+    fun deleteUser(
+        @PathVariable("user_id") userId: Long,
+    ) {
         userService.deleteUser(userId)
     }
 }

@@ -20,39 +20,37 @@ import ru.underfish.app.service.UserService
 @RequestMapping("/api/v1/communities")
 class CommunityController(
     private val communityService: CommunityService,
-    private val userService: UserService
+    private val userService: UserService,
 ) {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun createCommunity(
         @RequestBody request: CommunityCreateRequest,
-        authentication: Authentication
+        authentication: Authentication,
     ): CommunityResponse {
         val organizerId = userService.getUserIdByEmail(authentication.name)
         return communityService.createCommunity(request, organizerId)
     }
 
     @GetMapping
-    fun getCommunities(): List<CommunityResponse> {
-        return communityService.getCommunities()
-    }
+    fun getCommunities(): List<CommunityResponse> = communityService.getCommunities()
 
     @GetMapping("/{community_id}")
-    fun getCommunityById(@PathVariable("community_id") communityId: Long): CommunityResponse {
-        return communityService.getCommunityById(communityId)
-    }
+    fun getCommunityById(
+        @PathVariable("community_id") communityId: Long,
+    ): CommunityResponse = communityService.getCommunityById(communityId)
 
     @PutMapping("/{community_id}")
     fun updateCommunity(
         @PathVariable("community_id") communityId: Long,
-        @RequestBody request: CommunityCreateRequest
-    ): CommunityResponse {
-        return communityService.updateCommunity(communityId, request)
-    }
+        @RequestBody request: CommunityCreateRequest,
+    ): CommunityResponse = communityService.updateCommunity(communityId, request)
 
     @DeleteMapping("/{community_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteCommunity(@PathVariable("community_id") communityId: Long) {
+    fun deleteCommunity(
+        @PathVariable("community_id") communityId: Long,
+    ) {
         communityService.deleteCommunity(communityId)
     }
 }

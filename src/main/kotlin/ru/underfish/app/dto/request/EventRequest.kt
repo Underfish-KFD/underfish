@@ -13,6 +13,5 @@ data class EventRequest(
     val posterUrl: String? = null,
     val status: String,
     val maxParticipants: Int? = null,
-    val isOnline: Boolean? = null
+    val isOnline: Boolean? = null,
 )
-

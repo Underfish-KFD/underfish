@@ -21,38 +21,36 @@ import ru.underfish.app.service.UserService
 @RequestMapping("/api/v1/events/{event_id}/attendance")
 class EventAttendanceController(
     private val eventAttendanceService: EventAttendanceService,
-    private val userService: UserService
+    private val userService: UserService,
 ) {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun addAttendance(
         @PathVariable("event_id") eventId: Long,
         @RequestBody request: EventAttendanceRequest,
-        authentication: Authentication
+        authentication: Authentication,
     ): EventAttendanceResponse {
         val userId = userService.getUserIdByEmail(authentication.name)
         return eventAttendanceService.addAttendance(eventId, userId, request.status)
     }
 
     @GetMapping
-    fun getAttendances(@PathVariable("event_id") eventId: Long): List<EventAttendanceResponse> {
-        return eventAttendanceService.getEventAttendances(eventId)
-    }
+    fun getAttendances(
+        @PathVariable("event_id") eventId: Long,
+    ): List<EventAttendanceResponse> = eventAttendanceService.getEventAttendances(eventId)
 
     @PutMapping("/{user_id}")
     fun updateAttendance(
         @PathVariable("event_id") eventId: Long,
         @PathVariable("user_id") userId: Long,
-        @RequestBody request: EventAttendanceUpdateRequest
-    ): EventAttendanceResponse {
-        return eventAttendanceService.updateAttendance(eventId, userId, request.status)
-    }
+        @RequestBody request: EventAttendanceUpdateRequest,
+    ): EventAttendanceResponse = eventAttendanceService.updateAttendance(eventId, userId, request.status)
 
     @DeleteMapping("/{user_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun removeAttendance(
         @PathVariable("event_id") eventId: Long,
-        @PathVariable("user_id") userId: Long
+        @PathVariable("user_id") userId: Long,
     ) {
         eventAttendanceService.removeAttendance(eventId, userId)
     }

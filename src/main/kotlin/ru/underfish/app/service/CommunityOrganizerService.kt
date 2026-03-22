@@ -16,19 +16,25 @@ class CommunityOrganizerService(
     private val communityOrganizerRepository: CommunityOrganizerRepository,
     private val userRepository: UserRepository,
     private val communityRepository: CommunityRepository,
-    private val communityMemberRepository: CommunityMemberRepository
+    private val communityMemberRepository: CommunityMemberRepository,
 ) {
-    fun createOrganizer(organizerId: Long, communityId: Long): CommunityOrganizer {
-        val user = userRepository.findUserById(organizerId)
-            ?: throw NotFoundException("Organizer user not found")
-        val community = communityRepository.findById(communityId).orElseThrow {
-            NotFoundException("Community not found")
-        }
+    fun createOrganizer(
+        organizerId: Long,
+        communityId: Long,
+    ): CommunityOrganizer {
+        val user =
+            userRepository.findUserById(organizerId)
+                ?: throw NotFoundException("Organizer user not found")
+        val community =
+            communityRepository.findById(communityId).orElseThrow {
+                NotFoundException("Community not found")
+            }
 
-        val communityOrganizer = CommunityOrganizer(
-            community = community,
-            user = user
-        )
+        val communityOrganizer =
+            CommunityOrganizer(
+                community = community,
+                user = user,
+            )
 
         val savedOrganizer = communityOrganizerRepository.save(communityOrganizer)
 
@@ -36,15 +42,18 @@ class CommunityOrganizerService(
             communityMemberRepository.save(
                 CommunityMember(
                     user = user,
-                    community = community
-                )
+                    community = community,
+                ),
             )
         }
 
         return savedOrganizer
     }
 
-    fun addOrganizer(communityId: Long, userId: Long): CommunityOrganizerResponse {
+    fun addOrganizer(
+        communityId: Long,
+        userId: Long,
+    ): CommunityOrganizerResponse {
         if (communityOrganizerRepository.existsByCommunityIdAndUserId(communityId, userId)) {
             throw BadRequestException("Organizer already exists in community")
         }
@@ -58,11 +67,15 @@ class CommunityOrganizerService(
             NotFoundException("Community not found")
         }
 
-        return communityOrganizerRepository.findByCommunityId(communityId)
+        return communityOrganizerRepository
+            .findByCommunityId(communityId)
             .map(CommunityOrganizerResponse::fromEntity)
     }
 
-    fun removeOrganizer(communityId: Long, userId: Long) {
+    fun removeOrganizer(
+        communityId: Long,
+        userId: Long,
+    ) {
         val deleted = communityOrganizerRepository.deleteByCommunityIdAndUserId(communityId, userId)
         if (deleted == 0L) {
             throw NotFoundException("Organizer not found in community")
@@ -70,8 +83,9 @@ class CommunityOrganizerService(
     }
 
     fun getOrganizerIdByCommunityId(communityId: Long): Long {
-        val organizer = communityOrganizerRepository.findByCommunityId(communityId).firstOrNull()
-            ?: throw NotFoundException("Organizer for community not found")
+        val organizer =
+            communityOrganizerRepository.findByCommunityId(communityId).firstOrNull()
+                ?: throw NotFoundException("Organizer for community not found")
         return organizer.user.id
     }
 }

@@ -22,56 +22,58 @@ import ru.underfish.app.service.UserService
 @RequestMapping("/api/v1/events")
 class EventController(
     private val eventService: EventService,
-    private val userService: UserService
+    private val userService: UserService,
 ) {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun createEvent(
         @RequestBody request: EventRequest,
-        authentication: Authentication
+        authentication: Authentication,
     ): EventResponse {
         val userId = userService.getUserIdByEmail(authentication.name)
         return eventService.createEvent(request, userId)
     }
 
     @GetMapping
-    fun getEvents(): List<EventResponse> {
-        return eventService.getEvents()
-    }
+    fun getEvents(): List<EventResponse> = eventService.getEvents()
 
     @GetMapping("/{event_id}")
-    fun getEventById(@PathVariable("event_id") eventId: Long): EventResponse {
-        return eventService.getEventById(eventId)
-    }
+    fun getEventById(
+        @PathVariable("event_id") eventId: Long,
+    ): EventResponse = eventService.getEventById(eventId)
 
     @PutMapping("/{event_id}")
     fun updateEvent(
         @PathVariable("event_id") eventId: Long,
-        @RequestBody request: EventRequest
-    ): EventResponse {
-        return eventService.updateEvent(eventId, request)
-    }
+        @RequestBody request: EventRequest,
+    ): EventResponse = eventService.updateEvent(eventId, request)
 
     @DeleteMapping("/{event_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteEvent(@PathVariable("event_id") eventId: Long) {
+    fun deleteEvent(
+        @PathVariable("event_id") eventId: Long,
+    ) {
         eventService.deleteEvent(eventId)
     }
 
     @PostMapping("/{event_id}/tags")
     @ResponseStatus(HttpStatus.CREATED)
-    fun addTagToEvent(@PathVariable("event_id") eventId: Long, @RequestBody request: EventTagRequest): EventTagResponse {
-        return eventService.addTagToEvent(eventId, request)
-    }
+    fun addTagToEvent(
+        @PathVariable("event_id") eventId: Long,
+        @RequestBody request: EventTagRequest,
+    ): EventTagResponse = eventService.addTagToEvent(eventId, request)
 
     @GetMapping("/{event_id}/tags")
-    fun getEventTags(@PathVariable("event_id") eventId: Long): List<EventTagResponse> {
-        return eventService.getEventTags(eventId)
-    }
+    fun getEventTags(
+        @PathVariable("event_id") eventId: Long,
+    ): List<EventTagResponse> = eventService.getEventTags(eventId)
 
     @DeleteMapping("/{event_id}/tags/{tag_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun removeTagFromEvent(@PathVariable("event_id") eventId: Long, @PathVariable("tag_id") tagId: Long) {
+    fun removeTagFromEvent(
+        @PathVariable("event_id") eventId: Long,
+        @PathVariable("tag_id") tagId: Long,
+    ) {
         eventService.removeTagFromEvent(eventId, tagId)
     }
 }

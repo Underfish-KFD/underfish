@@ -8,5 +8,5 @@ data class JwtConfig(
     @Value("\${jwt.secret}") val secret: String,
     @Value("\${jwt.expiration}") val expiration: Long,
     @Value("\${jwt.header}") val header: String,
-    @Value("\${jwt.prefix}") val prefix: String
+    @Value("\${jwt.prefix}") val prefix: String,
 )

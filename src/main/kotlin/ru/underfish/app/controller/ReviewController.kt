@@ -17,28 +17,29 @@ import ru.underfish.app.service.UserService
 @RestController
 class ReviewController(
     private val reviewService: ReviewService,
-    private val userService: UserService
+    private val userService: UserService,
 ) {
     @PostMapping("/api/v1/events/{event_id}/reviews")
     @ResponseStatus(HttpStatus.CREATED)
     fun createReview(
         @PathVariable("event_id") eventId: Long,
         @RequestBody request: ReviewRequest,
-        authentication: Authentication
+        authentication: Authentication,
     ): ReviewResponse {
         val userId = userService.getUserIdByEmail(authentication.name)
         return reviewService.createReview(eventId, userId, request)
     }
 
     @GetMapping("/api/v1/events/{event_id}/reviews")
-    fun getEventReviews(@PathVariable("event_id") eventId: Long): List<ReviewResponse> {
-        return reviewService.getEventReviews(eventId)
-    }
+    fun getEventReviews(
+        @PathVariable("event_id") eventId: Long,
+    ): List<ReviewResponse> = reviewService.getEventReviews(eventId)
 
     @DeleteMapping("/api/v1/reviews/{review_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteReview(@PathVariable("review_id") reviewId: Long) {
+    fun deleteReview(
+        @PathVariable("review_id") reviewId: Long,
+    ) {
         reviewService.deleteReview(reviewId)
     }
 }
-

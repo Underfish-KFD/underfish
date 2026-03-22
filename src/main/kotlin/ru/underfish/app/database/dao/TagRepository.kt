@@ -8,5 +8,8 @@ interface TagRepository : AbstractRepository<Tag> {
     fun existsByName(name: String): Boolean
 
     @Query("SELECT CASE WHEN COUNT(t) > 0 THEN true ELSE false END FROM Tag t WHERE t.name = :name AND t.id != :id")
-    fun existsByNameAndIdNot(@Param("name") name: String, @Param("id") id: Long): Boolean
+    fun existsByNameAndIdNot(
+        @Param("name") name: String,
+        @Param("id") id: Long,
+    ): Boolean
 }

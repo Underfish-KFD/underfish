@@ -7,17 +7,15 @@ data class CommunityMemberResponse(
     val memberId: String,
     val userId: String,
     val communityId: String,
-    val joinedAt: LocalDateTime
+    val joinedAt: LocalDateTime,
 ) {
     companion object {
-        fun fromEntity(member: CommunityMember): CommunityMemberResponse {
-            return CommunityMemberResponse(
+        fun fromEntity(member: CommunityMember): CommunityMemberResponse =
+            CommunityMemberResponse(
                 memberId = member.id.toString(),
                 userId = member.user.id.toString(),
                 communityId = member.community.id.toString(),
-                joinedAt = member.createdAt
+                joinedAt = member.createdAt,
             )
-        }
     }
 }
-

@@ -11,7 +11,7 @@ data class LocationResponse(
     val city: String?,
     val district: String?,
     val placeName: String?,
-    val timezone: String?
+    val timezone: String?,
 ) {
     constructor(location: Location) : this(
         locationId = location.id.toString(),
@@ -21,6 +21,6 @@ data class LocationResponse(
         city = location.city,
         district = location.district,
         placeName = location.placeName,
-        timezone = location.timezone
+        timezone = location.timezone,
     )
 }

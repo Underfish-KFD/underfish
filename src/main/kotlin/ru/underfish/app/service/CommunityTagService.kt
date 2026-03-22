@@ -10,15 +10,20 @@ import ru.underfish.app.exception.NotFoundException
 @Service
 class CommunityTagService(
     private val communityRepository: CommunityRepository,
-    private val tagRepository: TagRepository
+    private val tagRepository: TagRepository,
 ) {
-    fun addTagToCommunity(communityId: Long, tagId: Long): CommunityTagResponse {
-        val community = communityRepository.findById(communityId).orElseThrow {
-            NotFoundException("Community not found")
-        }
-        val tag = tagRepository.findById(tagId).orElseThrow {
-            NotFoundException("Tag not found")
-        }
+    fun addTagToCommunity(
+        communityId: Long,
+        tagId: Long,
+    ): CommunityTagResponse {
+        val community =
+            communityRepository.findById(communityId).orElseThrow {
+                NotFoundException("Community not found")
+            }
+        val tag =
+            tagRepository.findById(tagId).orElseThrow {
+                NotFoundException("Tag not found")
+            }
 
         if (community.tags.any { it.id == tag.id }) {
             throw BadRequestException("Tag already added to community")
@@ -30,19 +35,24 @@ class CommunityTagService(
     }
 
     fun getCommunityTags(communityId: Long): List<CommunityTagResponse> {
-        val community = communityRepository.findById(communityId).orElseThrow {
-            NotFoundException("Community not found")
-        }
+        val community =
+            communityRepository.findById(communityId).orElseThrow {
+                NotFoundException("Community not found")
+            }
 
         return community.tags.map { tag ->
             CommunityTagResponse.fromIds(community.id, tag.id)
         }
     }
 
-    fun removeTagFromCommunity(communityId: Long, tagId: Long) {
-        val community = communityRepository.findById(communityId).orElseThrow {
-            NotFoundException("Community not found")
-        }
+    fun removeTagFromCommunity(
+        communityId: Long,
+        tagId: Long,
+    ) {
+        val community =
+            communityRepository.findById(communityId).orElseThrow {
+                NotFoundException("Community not found")
+            }
 
         val removed = community.tags.removeIf { it.id == tagId }
         if (!removed) {
@@ -52,4 +62,3 @@ class CommunityTagService(
         communityRepository.save(community)
     }
 }
-

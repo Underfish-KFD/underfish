@@ -12,22 +12,23 @@ import ru.underfish.app.service.NotificationService
 
 @RestController
 class NotificationController(
-    private val notificationService: NotificationService
+    private val notificationService: NotificationService,
 ) {
     @GetMapping("/api/v1/users/{user_id}/notifications")
-    fun getUserNotifications(@PathVariable("user_id") userId: Long): List<NotificationResponse> {
-        return notificationService.getUserNotifications(userId)
-    }
+    fun getUserNotifications(
+        @PathVariable("user_id") userId: Long,
+    ): List<NotificationResponse> = notificationService.getUserNotifications(userId)
 
     @PutMapping("/api/v1/notifications/{notification_id}/read")
-    fun markAsRead(@PathVariable("notification_id") notificationId: Long): NotificationResponse {
-        return notificationService.markAsRead(notificationId)
-    }
+    fun markAsRead(
+        @PathVariable("notification_id") notificationId: Long,
+    ): NotificationResponse = notificationService.markAsRead(notificationId)
 
     @DeleteMapping("/api/v1/notifications/{notification_id}/read")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteNotification(@PathVariable("notification_id") notificationId: Long) {
+    fun deleteNotification(
+        @PathVariable("notification_id") notificationId: Long,
+    ) {
         notificationService.deleteNotification(notificationId)
     }
 }
-

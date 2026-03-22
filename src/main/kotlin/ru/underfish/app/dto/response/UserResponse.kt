@@ -11,11 +11,11 @@ data class UserResponse(
     val phone: String?,
     val avatarUrl: String?,
     val registrationDate: LocalDateTime,
-    val lastLogin: LocalDateTime?
+    val lastLogin: LocalDateTime?,
 ) {
     companion object {
-        fun fromEntity(user: User): UserResponse {
-            return UserResponse(
+        fun fromEntity(user: User): UserResponse =
+            UserResponse(
                 userId = user.id.toString(),
                 email = user.email,
                 firstName = user.firstName ?: "",
@@ -23,8 +23,7 @@ data class UserResponse(
                 phone = user.phone,
                 avatarUrl = user.avatarUrl,
                 registrationDate = user.createdAt,
-                lastLogin = user.lastLogin
+                lastLogin = user.lastLogin,
             )
-        }
     }
 }

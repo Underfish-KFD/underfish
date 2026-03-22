@@ -9,35 +9,33 @@ import ru.underfish.app.service.LocationService
 @RestController
 @RequestMapping("/api/v1/locations")
 class LocationController(
-    private val locationService: LocationService
+    private val locationService: LocationService,
 ) {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun createLocation(@RequestBody request: LocationCreateRequest): LocationResponse {
-        return locationService.createLocation(request)
-    }
+    fun createLocation(
+        @RequestBody request: LocationCreateRequest,
+    ): LocationResponse = locationService.createLocation(request)
 
     @GetMapping
-    fun getLocations(): List<LocationResponse> {
-        return locationService.getLocations()
-    }
+    fun getLocations(): List<LocationResponse> = locationService.getLocations()
 
     @GetMapping("/{location_id}")
-    fun getLocation(@PathVariable("location_id") locationId: Long): LocationResponse {
-        return locationService.getLocationById(locationId)
-    }
+    fun getLocation(
+        @PathVariable("location_id") locationId: Long,
+    ): LocationResponse = locationService.getLocationById(locationId)
 
     @PutMapping("/{location_id}")
     fun updateLocation(
         @PathVariable("location_id") locationId: Long,
-        @RequestBody request: LocationCreateRequest
-    ): LocationResponse {
-        return locationService.updateLocation(locationId, request)
-    }
+        @RequestBody request: LocationCreateRequest,
+    ): LocationResponse = locationService.updateLocation(locationId, request)
 
     @DeleteMapping("/{location_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteLocation(@PathVariable("location_id") locationId: Long) {
+    fun deleteLocation(
+        @PathVariable("location_id") locationId: Long,
+    ) {
         locationService.deleteLocation(locationId)
     }
 }

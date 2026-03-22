@@ -18,22 +18,22 @@ import ru.underfish.app.security.JwtTokenUtil
 class UserService(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
-    private val jwtTokenUtil: JwtTokenUtil
+    private val jwtTokenUtil: JwtTokenUtil,
 ) {
-
     fun registerUser(request: UserRegistrationRequest): UserResponse {
         if (userRepository.existsByEmail(request.email)) {
             throw BadRequestException("User with this email already exists")
         }
 
-        val user = ru.underfish.app.database.entities.User(
-            email = request.email,
-            passwordHash = passwordEncoder.encode(request.password),
-            firstName = request.firstName,
-            lastName = request.lastName,
-            phone = request.phone,
-            role = Role.USER,
-        )
+        val user =
+            ru.underfish.app.database.entities.User(
+                email = request.email,
+                passwordHash = passwordEncoder.encode(request.password),
+                firstName = request.firstName,
+                lastName = request.lastName,
+                phone = request.phone,
+                role = Role.USER,
+            )
 
         val savedUser = userRepository.save(user)
         return UserResponse.fromEntity(savedUser)
@@ -55,7 +55,10 @@ class UserService(
         return UserResponse.fromEntity(user)
     }
 
-    fun updateUser(userId: Long, request: UserUpdateRequest): UserResponse {
+    fun updateUser(
+        userId: Long,
+        request: UserUpdateRequest,
+    ): UserResponse {
         val user = userRepository.findUserById(userId) ?: throw NotFoundException("User not found")
 
         request.firstName?.let { user.firstName = it }

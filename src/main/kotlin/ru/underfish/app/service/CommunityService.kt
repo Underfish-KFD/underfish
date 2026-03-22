@@ -10,14 +10,18 @@ import ru.underfish.app.exception.NotFoundException
 @Service
 class CommunityService(
     private val communityRepository: CommunityRepository,
-    private val communityOrganizerService: CommunityOrganizerService
+    private val communityOrganizerService: CommunityOrganizerService,
 ) {
-    fun createCommunity(request: CommunityCreateRequest, organizerId: Long): CommunityResponse {
-        val community = Community(name = request.name).apply {
-            description = request.description
-            coverUrl = request.coverUrl
-            isPrivate = request.isPrivate
-        }
+    fun createCommunity(
+        request: CommunityCreateRequest,
+        organizerId: Long,
+    ): CommunityResponse {
+        val community =
+            Community(name = request.name).apply {
+                description = request.description
+                coverUrl = request.coverUrl
+                isPrivate = request.isPrivate
+            }
 
         val savedCommunity = communityRepository.save(community)
         val communityOrganizer = communityOrganizerService.createOrganizer(organizerId, savedCommunity.id)
@@ -25,25 +29,29 @@ class CommunityService(
         return CommunityResponse.fromEntity(savedCommunity, communityOrganizer.user.id)
     }
 
-    fun getCommunities(): List<CommunityResponse> {
-        return communityRepository.findAll().map { community ->
+    fun getCommunities(): List<CommunityResponse> =
+        communityRepository.findAll().map { community ->
             val organizerId = communityOrganizerService.getOrganizerIdByCommunityId(community.id)
             CommunityResponse.fromEntity(community, organizerId)
         }
-    }
 
     fun getCommunityById(communityId: Long): CommunityResponse {
-        val community = communityRepository.findById(communityId).orElseThrow {
-            NotFoundException("Community not found")
-        }
+        val community =
+            communityRepository.findById(communityId).orElseThrow {
+                NotFoundException("Community not found")
+            }
         val organizerId = communityOrganizerService.getOrganizerIdByCommunityId(community.id)
         return CommunityResponse.fromEntity(community, organizerId)
     }
 
-    fun updateCommunity(communityId: Long, request: CommunityCreateRequest): CommunityResponse {
-        val community = communityRepository.findById(communityId).orElseThrow {
-            NotFoundException("Community not found")
-        }
+    fun updateCommunity(
+        communityId: Long,
+        request: CommunityCreateRequest,
+    ): CommunityResponse {
+        val community =
+            communityRepository.findById(communityId).orElseThrow {
+                NotFoundException("Community not found")
+            }
 
         community.name = request.name
         community.description = request.description
@@ -56,9 +64,10 @@ class CommunityService(
     }
 
     fun deleteCommunity(communityId: Long) {
-        val community = communityRepository.findById(communityId).orElseThrow {
-            NotFoundException("Community not found")
-        }
+        val community =
+            communityRepository.findById(communityId).orElseThrow {
+                NotFoundException("Community not found")
+            }
         communityRepository.delete(community)
     }
 }
